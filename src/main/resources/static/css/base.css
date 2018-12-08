@@ -1,0 +1,59 @@
+/*公共样式*/
+html,body,div,span,h1,h2,h3,h4,h5,h6,p,a,em,img,strong,dl,dt,dd,ol,ul,li,fieldset,form,label,legend{margin:0;padding:0;}
+ol,ul,li{list-style:none;}
+a img{border:0;}
+img{vertical-align:middle;}
+em,i{font-style:normal;}
+h3,h4,h5,th{font-weight:normal}
+a:active,a:focus{outline:0;}
+body{font:14px/21px "microsoft yahei";background-color:#fff;color:#666;min-width:1200px;}
+a{text-decoration:none;color:#666666;}
+a:hover{text-decoration:none;cursor:pointer}
+.clear{clear:both}
+.overflow{overflow:hidden;}
+.block{display:block;overflow:hidden;}
+.fl{float:left;}
+.fr{float:right;}
+.tl{text-align:left;}
+.tc{text-align:center;}
+.tright{text-align:right;}
+input,button,select,textarea{outline:none;font-family:"microsoft yahei"}
+.clearfix:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0}
+* html .clearfix{zoom:1}
+*:first-child+html .clearfix{zoom:1}
+.zoom{zoom:1}
+input::-webkit-input-placeholder{
+    color:#999;
+}
+input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+    color:#999;
+}
+input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+    color:#999;
+}
+input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+    color:#999;
+}
+.tp2{border-bottom:1px solid #e8e8e8}
+
+.w1200{width:1200px;margin:0 auto;}
+
+.em2{color:#333!important}
+.em3{color:#999!important}
+.em4{color:#cc0104}
+.em03{color:#3c89d7}
+
+.ft12{font-size:12px!important}
+.ft14{font-size:14px!important}
+.ft15{font-size:15px}
+.ft18{font-size:18px!important}
+.ft20{font-size:20px!important}
+.ft24{font-size:24px!important}
+.mt5{margin-top:5px}
+.mt10{margin-top:10px}
+.mt15{margin-top:15px}
+.mt20{margin-top:20px!important}
+.mt30{margin-top:30px!important}
+.mt40{margin-top:40px!important}
+.mt50{margin-top:50px!important}
+.white-bg{background:#fff!important}
