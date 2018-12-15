@@ -30,6 +30,7 @@
         <li class="cur">关键词分析<i></i></li>
         <li>文件分析<i></i></li>
         <li>地区分析<i></i></li>
+        <li>申请人/发明人<i></i></li>
       </ul>
       <div class="features">
         <!-- start -->
@@ -85,6 +86,16 @@
           </form>
         </div>
         <!-- end -->
+        <div class="item" style="display: none;">
+          <form type="get" action="${request.contextPath}/inventor">
+            <div class="searchBox">
+              <input id="name" name="name" type="text" placeholder="输入申请人/发明人" class="fl editText">
+              <a class="fl voicebtn"><img src="${request.contextPath}/img/voice.png"></a>
+              <button id="inventor" class="fr searchBtn" type="submit">查询</button>
+            </div>
+          </form>
+
+        </div>
       </div>
       <div class="results">
         <h3>分析历史</h3>

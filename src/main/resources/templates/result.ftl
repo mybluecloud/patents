@@ -12,7 +12,7 @@
 </head>
 <style>
   #chartdiv {
-    width		: 800px;
+    width		: 50%;
     height		: 600px;
   }
 </style>

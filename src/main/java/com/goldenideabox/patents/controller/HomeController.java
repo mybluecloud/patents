@@ -58,6 +58,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Controller
 public class HomeController {
 
@@ -157,6 +158,30 @@ public class HomeController {
         return info;
     }
 
+    @RequestMapping(value = {"/inventor"})
+    public String inventor(Model model, @RequestParam(required = true) String name) {
+
+
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        CloseableHttpClient httpclient = httpClientBuilder.build();
+        String content,token,query;
+        try {
+           /// query = "in:("+name+")";
+            openPatexplorer(httpclient);
+            token = queryPatexplorerToken(httpclient, name);
+            content = queryPatexplorerTotalNum(httpclient, name,token);
+            JSONObject jsonObject = JSON.parseObject(content);
+            model.addAttribute("content",jsonObject);
+            model.addAttribute("query",name);
+
+            httpclient.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "inventor";
+    }
+
 
     @RequestMapping(value = {"/analyze"})
     public String analyze(Model model, @RequestParam(required = true) int province,
@@ -168,7 +193,10 @@ public class HomeController {
         }
 
         if (city != 0 ) {
-            query += areaInfoMapper.selectById(city).getExtName();
+            String name = areaInfoMapper.selectById(city).getExtName();
+            if (!name.equalsIgnoreCase("市辖区")) {
+                query += name;
+            }
         }
 
         if (county != 0 ) {
@@ -177,12 +205,15 @@ public class HomeController {
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         CloseableHttpClient httpclient = httpClientBuilder.build();
-        String total = "";
-        String token;
+        String total,content,token;
         try {
             openPatexplorer(httpclient);
             token = queryPatexplorerToken(httpclient, query);
-            total = queryPatexplorerTotalNum(httpclient, query,token);
+            content = queryPatexplorerTotalNum(httpclient, query,token);
+            JSONObject jsonObject = JSON.parseObject(content);
+            total = jsonObject.getJSONObject("cubePatentSearchResponse").getString("total_hits");
+            model.addAttribute("content",jsonObject);
+
             model.addAttribute("total",total);
             model.addAttribute("query",query);
             //申请人
@@ -256,7 +287,8 @@ public class HomeController {
     }
 
     private String queryPatexplorerToken(CloseableHttpClient httpclient, String query) throws Exception {
-        HttpPost httppost = new HttpPost("https://www.patexplorer.com/results/s.html?sc=&q=" + URLEncoder.encode(query, "utf-8") + "&type=s");
+
+        HttpPost httppost = new HttpPost("https://www.patexplorer.com/results/s.html?sc=&q=" + URLEncoder.encode(query, "utf-8") + "&fq=lsn1%3A%28%E6%9C%89%E6%9D%83%29&type=s");
 
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
         formparams.add(new BasicNameValuePair("sc", ""));
@@ -282,7 +314,7 @@ public class HomeController {
 
         HttpEntity entity = httpresponse.getEntity();
         String body = EntityUtils.toString(entity);
-
+        
         String token = body.substring(body.lastIndexOf("window.token = '") + 16, body.indexOf("';", body.indexOf("window.token = '")));
 
         String bToken = Base64.getEncoder().encodeToString(token.getBytes("utf-8"));
@@ -299,7 +331,7 @@ public class HomeController {
 
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
         formparams.add(new BasicNameValuePair("sc", ""));
-        formparams.add(new BasicNameValuePair("q", "陕西省西安市雁塔区"));
+        formparams.add(new BasicNameValuePair("q", query));
         formparams.add(new BasicNameValuePair("type", "s"));
         formparams.add(new BasicNameValuePair("sort", ""));
         formparams.add(new BasicNameValuePair("sortField", ""));
@@ -329,10 +361,7 @@ public class HomeController {
         String content = EntityUtils.toString(entity);
         httpresponse.close();
 
-        JSONObject jsonObject = JSON.parseObject(content);
-        String total = jsonObject.getJSONObject("cubePatentSearchResponse").getString("total_hits");
-
-        return total;
+        return content;
     }
 
     private void openPatexplorer(CloseableHttpClient httpclient) throws Exception {
